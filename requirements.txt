@@ -2,4 +2,5 @@ Flask==3.0.3
 Flask-SQLAlchemy==3.1.1
 Flask-Migrate==4.0.5
 python-dotenv==1.0.1
-# mysqlclient==2.2.4
+SQLAlchemy==2.0.36        # or any 2.x version you're using
+psycopg2-binary==2.9.10   # any recent 2.9.x is fine
