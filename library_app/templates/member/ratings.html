@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2>My ratings</h2>
+    <p class="text-muted mb-0">Share feedback on books you've read.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('library.member_create_rating') }}">Add rating</a>
+</div>
+<div class="list-group">
+  {% for rating in ratings %}
+    <div class="list-group-item d-flex justify-content-between align-items-start">
+      <div>
+        <strong>{{ rating.book.title }}</strong>
+        <p class="mb-1 text-muted small">{{ rating.created_at.strftime('%Y-%m-%d') }}</p>
+        <p class="mb-0">{{ rating.comment }}</p>
+      </div>
+      <span class="badge bg-success">{{ rating.score }}/5</span>
+    </div>
+  {% else %}
+    <div class="list-group-item">You haven't added any ratings.</div>
+  {% endfor %}
+</div>
+{% endblock %}

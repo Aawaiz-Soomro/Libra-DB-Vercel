@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title">Add a rating</h2>
+        <p class="text-muted">Let other members know what you think.</p>
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label" for="book_id">Book</label>
+            <select class="form-select" id="book_id" name="book_id" required>
+              {% for book in books %}
+                <option value="{{ book.id }}" {% if selected_book_id == book.id %}selected{% endif %}>{{ book.title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="score">Score (1-5)</label>
+            <input type="number" class="form-control" id="score" name="score" min="1" max="5" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="comment">Comment</label>
+            <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="What did you think?"></textarea>
+          </div>
+          <div class="d-flex justify-content-end gap-2">
+            <a class="btn btn-outline-secondary" href="{{ url_for('library.member_ratings') }}">Cancel</a>
+            <button class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

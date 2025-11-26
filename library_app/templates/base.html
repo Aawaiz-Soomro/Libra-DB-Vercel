@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Library Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('library.index') }}">LibraDB</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav justify-content-center w-100">
+            {% if active_role == 'librarian' %}
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('library.admin_portal') }}">Librarian Portal</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('library.books') }}">Books</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('library.users') }}">Users</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('library.bookings') }}">Bookings</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('library.ratings') }}">Ratings</a></li>
+            {% elif active_role == 'member' %}
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('library.member_portal') }}">Member Portal</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('library.member_books') }}">Browse Books</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('library.member_bookings') }}">My Bookings</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('library.member_ratings') }}">My Ratings</a></li>
+            {% endif %}
+          </ul>
+          <div class="d-flex ms-auto">
+            {% if active_user %}
+              <a class="nav-link text-white fw-semibold" href="{{ url_for('library.logout') }}">Logout</a>
+            {% else %}
+              <a class="nav-link text-white fw-semibold" href="{{ url_for('library.login') }}">Login / Register</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+    <main class="container py-4">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ hero.name }} — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/portfolio.css') }}">
+  </head>
+  <body>
+    <div class="star-field"></div>
+    <header class="hero" id="top">
+      <nav class="nav">
+        <div class="logo">{{ hero.name }}</div>
+        <div class="nav-links">
+          <a href="#projects">Projects</a>
+          <a href="#skills">Stack</a>
+          <a href="#experience">Experience</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <a class="ghost-link" href="/">Back to App</a>
+      </nav>
+      <div class="hero-content">
+        <div class="eyebrow">{{ hero.roles|join(' • ') }}</div>
+        <h1>{{ hero.tagline }}</h1>
+        <p class="lead">{{ hero.bio }}</p>
+        <div class="cta-row">
+          <a class="btn primary" href="{{ hero.cta_primary.url }}">{{ hero.cta_primary.label }}</a>
+          <a class="btn secondary" href="{{ hero.cta_secondary.url }}">{{ hero.cta_secondary.label }}</a>
+        </div>
+        <div class="stats">
+          {% for stat in stats %}
+          <div class="stat-card">
+            <div class="value">{{ stat.value }}</div>
+            <div class="label">{{ stat.label }}</div>
+            <div class="detail">{{ stat.detail }}</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="badge">Personal Playground</div>
+        <h2>High-fidelity, dark-mode-first experiments that balance art and engineering.</h2>
+        <p>Crafting immersive experiences with animation systems, tactile typography, and delightful performance budgets.</p>
+        <div class="hero-image"></div>
+      </div>
+    </header>
+
+    <section class="spotlights" aria-label="Highlights">
+      {% for item in spotlights %}
+      <article>
+        <p class="eyebrow">{{ item.title }}</p>
+        <p>{{ item.description }}</p>
+      </article>
+      {% endfor %}
+    </section>
+
+    <section class="projects" id="projects" aria-label="Featured Projects">
+      <div class="section-header">
+        <p class="eyebrow">Selected Builds</p>
+        <h2>Pixel-perfect stories told through code.</h2>
+      </div>
+      <div class="project-grid">
+        {% for project in projects %}
+        <article class="project-card">
+          <div class="project-image" style="background-image: url('{{ project.image }}');"></div>
+          <div class="project-body">
+            <p class="eyebrow">{{ project.subtitle }}</p>
+            <h3>{{ project.title }}</h3>
+            <p>{{ project.description }}</p>
+            <div class="tag-row">
+              {% for tag in project.tags %}
+              <span>{{ tag }}</span>
+              {% endfor %}
+            </div>
+            <a href="{{ project.link }}" class="ghost-link">Explore <span>↗</span></a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="skills" id="skills" aria-label="Stack">
+      <div class="section-header">
+        <p class="eyebrow">Capabilities</p>
+        <h2>Code + craft, harmonized.</h2>
+      </div>
+      <div class="skill-columns">
+        {% for group in skill_groups %}
+        <article>
+          <h3>{{ group.title }}</h3>
+          <div class="pill-row">
+            {% for item in group.stack %}
+            <span>{{ item }}</span>
+            {% endfor %}
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="experience" id="experience" aria-label="Experience">
+      <div class="section-header">
+        <p class="eyebrow">Journey</p>
+        <h2>Where I've been building.</h2>
+      </div>
+      <div class="timeline">
+        {% for exp in experiences %}
+        <article>
+          <div class="time">{{ exp.timeframe }}</div>
+          <div class="content">
+            <h3>{{ exp.role }}</h3>
+            <p class="company">{{ exp.company }}</p>
+            <p>{{ exp.summary }}</p>
+            <ul>
+              {% for highlight in exp.highlights %}
+              <li>{{ highlight }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-label="Contact">
+      <div class="contact-card">
+        <p class="eyebrow">Connect</p>
+        <h2>Let's design something bold.</h2>
+        <p>{{ contact.availability }}</p>
+        <div class="contact-grid">
+          <div>
+            <p class="label">Email</p>
+            <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>
+          </div>
+          <div>
+            <p class="label">Location</p>
+            <p>{{ contact.location }}</p>
+          </div>
+        </div>
+        <div class="cta-row">
+          <a class="btn primary" href="mailto:{{ contact.email }}">Send a note</a>
+          <a class="btn secondary" href="#top">Back to top</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© {{ hero.name }} — built with love, light, and a fast dev loop.</p>
+    </footer>
+  </body>
+</html>

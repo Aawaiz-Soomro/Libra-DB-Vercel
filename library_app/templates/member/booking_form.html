@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="card-title mb-3">Create a booking</h2>
+        <p class="text-muted">Logged in as {{ member.name }} ({{ member.email }}). Requests need librarian approval before pickup.</p>
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label" for="book_id">Select book</label>
+            <select class="form-select" id="book_id" name="book_id" required>
+              {% for book in books %}
+                <option value="{{ book.id }}" {% if (selected_book_id or request.args.get('book_id', type=int)) == book.id %}selected{% endif %}>
+                  {{ book.title }} ({{ book.copies_available }} available)
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label" for="start_date">Start date</label>
+              <input type="date" class="form-control" id="start_date" name="start_date" required min="{{ min_date }}" value="{{ min_date }}">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="end_date">End date</label>
+              <input type="date" class="form-control" id="end_date" name="end_date" required min="{{ min_date }}" value="{{ default_end }}">
+            </div>
+          </div>
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a class="btn btn-outline-secondary" href="{{ url_for('library.member_bookings') }}">Cancel</a>
+            <button class="btn btn-primary">Book now</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

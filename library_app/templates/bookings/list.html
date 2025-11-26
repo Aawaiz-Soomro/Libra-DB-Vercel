@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Bookings</h2>
+    <a class="btn btn-primary" href="{{ url_for('library.create_booking') }}">Create Booking</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Book</th>
+          <th>User</th>
+          <th>Start</th>
+          <th>End</th>
+          <th>Status</th>
+          <th>Fine</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+          <tr>
+            <td>{{ booking.book.title }}</td>
+            <td>{{ booking.user.name }}</td>
+          <td>{{ booking.start_date.strftime('%Y-%m-%d') }}</td>
+          <td>{{ booking.end_date.strftime('%Y-%m-%d') }}</td>
+          <td>
+              {% if not booking.approved %}
+                <span class="badge bg-warning text-dark">Pending approval</span>
+              {% elif booking.return_requested and not booking.returned %}
+                <span class="badge bg-info text-dark">Return requested</span>
+              {% elif booking.returned %}
+                <span class="badge bg-success">Returned</span>
+              {% else %}
+                <span class="badge bg-primary">Active</span>
+              {% endif %}
+          </td>
+          <td>
+            {% if booking.fine_amount %}
+              <span class="badge bg-danger">Rs {{ booking.fine_amount }}</span>
+            {% else %}
+              <span class="text-muted">-</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+              {% if not booking.approved %}
+                <form action="{{ url_for('library.approve_booking', booking_id=booking.id) }}" method="post" class="d-inline">
+                  <button class="btn btn-sm btn-primary" {% if booking.book.copies_available < 1 %}disabled{% endif %}>Approve</button>
+                </form>
+              {% elif booking.return_requested and not booking.returned %}
+                <form action="{{ url_for('library.return_booking', booking_id=booking.id) }}" method="post" class="d-inline">
+                  <button class="btn btn-sm btn-success">Confirm return</button>
+                </form>
+              {% elif not booking.returned %}
+                <form action="{{ url_for('library.return_booking', booking_id=booking.id) }}" method="post" class="d-inline">
+                  <button class="btn btn-sm btn-outline-success">Mark Returned</button>
+                </form>
+              {% endif %}
+          </td>
+        </tr>
+      {% else %}
+          <tr>
+            <td colspan="6" class="text-center">No bookings yet.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

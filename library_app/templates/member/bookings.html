@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h2>Your bookings</h2>
+    <p class="text-muted mb-0">Track active and returned books.</p>
+  </div>
+  <a class="btn btn-primary" href="{{ url_for('library.member_create_booking') }}">New booking</a>
+</div>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Book</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Status</th>
+        <th>Fine</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+        <tr>
+          <td>{{ booking.book.title }}</td>
+          <td>{{ booking.start_date.strftime('%Y-%m-%d') }}</td>
+          <td>{{ booking.end_date.strftime('%Y-%m-%d') }}</td>
+          <td>
+            {% if not booking.approved %}
+              <span class="badge bg-warning text-dark">Pending librarian approval</span>
+            {% elif booking.return_requested and not booking.returned %}
+              <span class="badge bg-info text-dark">Return requested</span>
+            {% elif booking.returned %}
+              <span class="badge bg-success">Returned</span>
+            {% else %}
+              <span class="badge bg-info text-dark">Active</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if booking.fine_amount %}
+              <span class="badge bg-danger">Rs {{ booking.fine_amount }}</span>
+            {% else %}
+              <span class="text-muted">-</span>
+            {% endif %}
+          </td>
+          <td class="text-end">
+            {% if booking.approved and not booking.returned and not booking.return_requested %}
+              <form action="{{ url_for('library.member_return_booking', booking_id=booking.id) }}" method="post" class="d-inline">
+                <button class="btn btn-sm btn-outline-success">Mark returned</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr>
+          <td colspan="5" class="text-center">No bookings yet.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

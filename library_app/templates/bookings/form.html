@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Create Booking</h2>
+  <form method="post" class="mt-3">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">User</label>
+        <select class="form-select" name="user_id" required>
+          {% for user in users %}
+            <option value="{{ user.id }}">{{ user.name }}</option>
+          {% endfor %}
+        </select>
+        <div class="form-text">Only approved members can be booked.</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Book</label>
+        <select class="form-select" name="book_id">
+          {% for book in books %}
+            <option value="{{ book.id }}">{{ book.title }} ({{ book.copies_available }} available)</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Start Date</label>
+        <input class="form-control" type="date" name="start_date" required>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">End Date</label>
+        <input class="form-control" type="date" name="end_date" required>
+      </div>
+    </div>
+    <div class="mt-3">
+      <button class="btn btn-primary">Save</button>
+      <a class="btn btn-secondary" href="{{ url_for('library.bookings') }}">Cancel</a>
+    </div>
+  </form>
+{% endblock %}

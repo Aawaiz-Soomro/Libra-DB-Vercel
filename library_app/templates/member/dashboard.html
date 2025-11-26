@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h4 mb-1">Welcome, {{ member.name }}</h1>
+    <p class="text-muted mb-0">Browse books, place holds, and share your feedback.</p>
+  </div>
+  <a class="btn btn-outline-light" href="{{ url_for('library.logout') }}">Logout</a>
+</div>
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title">Browse the catalog</h5>
+        <p class="text-muted">Find your next read and book it.</p>
+        <a class="btn btn-primary" href="{{ url_for('library.member_books') }}">View books</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title">Your bookings</h5>
+        <p class="text-muted">Check active loans and due dates.</p>
+        <a class="btn btn-primary" href="{{ url_for('library.member_bookings') }}">Manage bookings</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title">Rate your reads</h5>
+        <p class="text-muted">Share feedback to guide other members.</p>
+        <a class="btn btn-primary" href="{{ url_for('library.member_ratings') }}">See my ratings</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="card-title mb-0">Active bookings</h5>
+          <a href="{{ url_for('library.member_create_booking') }}" class="btn btn-sm btn-outline-primary">New booking</a>
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for booking in open_bookings %}
+            <li class="list-group-item d-flex justify-content-between">
+              <div>
+                <strong>{{ booking.book.title }}</strong><br>
+                <small class="text-muted">Due {{ booking.end_date.strftime('%Y-%m-%d') }}</small><br>
+                {% if not booking.approved %}
+                  <span class="badge bg-warning text-dark">Awaiting librarian approval</span>
+                {% elif booking.return_requested %}
+                  <span class="badge bg-info text-dark">Return requested</span>
+                {% endif %}
+              </div>
+              {% if booking.approved and not booking.returned and not booking.return_requested %}
+                <form action="{{ url_for('library.member_return_booking', booking_id=booking.id) }}" method="post">
+                  <button class="btn btn-sm btn-success">Mark returned</button>
+                </form>
+              {% endif %}
+            </li>
+          {% else %}
+            <li class="list-group-item">No active bookings.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="card-title mb-0">Your recent ratings</h5>
+          <a href="{{ url_for('library.member_create_rating') }}" class="btn btn-sm btn-outline-primary">Add rating</a>
+        </div>
+        <ul class="list-group list-group-flush">
+          {% for rating in recent_ratings %}
+            <li class="list-group-item d-flex justify-content-between">
+              <div>
+                <strong>{{ rating.book.title }}</strong><br>
+                <small class="text-muted">{{ rating.created_at.strftime('%Y-%m-%d') }}</small>
+                <p class="mb-0">{{ rating.comment }}</p>
+              </div>
+              <span class="badge bg-success align-self-start">{{ rating.score }}/5</span>
+            </li>
+          {% else %}
+            <li class="list-group-item">No ratings yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card shadow-sm mt-4">
+  <div class="card-body">
+    <h5 class="card-title mb-3">New arrivals</h5>
+    <div class="row g-3">
+      {% for book in suggested_books %}
+        <div class="col-md-6 col-lg-3">
+          <div class="border rounded p-3 h-100">
+            <h6 class="mb-1">{{ book.title }}</h6>
+            <p class="text-muted mb-2">{{ book.author }}</p>
+            <a href="{{ url_for('library.member_create_booking') }}?book_id={{ book.id }}" class="btn btn-sm btn-outline-primary">Book now</a>
+          </div>
+        </div>
+      {% else %}
+        <div class="col-12"><p class="text-muted mb-0">No books yet.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
