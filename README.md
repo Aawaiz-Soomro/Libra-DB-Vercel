@@ -54,3 +54,18 @@ python -m flask --app app run --debug
 ├── requirements.txt
 └── README.md
 ```
+
+## Deploying to Vercel
+
+The repository is wired for Vercel's Python runtime via the included `vercel.json`. To deploy:
+
+1. **Provision a persistent database.** Vercel serverless functions have ephemeral storage, so use a hosted database such as Neon, Supabase, PlanetScale, or Railway. Capture its connection string (e.g., `postgresql://...` or `mysql://...`).
+2. **Set required environment variables** in the Vercel dashboard (or via `vercel env`):
+   - `SECRET_KEY`: any random string for Flask sessions.
+   - `DATABASE_URL`: the connection string for your remote database.
+3. **Install dependencies & build:**
+   - If you're testing locally with the Vercel CLI, run `npm i -g vercel` and `vercel dev` to spin up the serverless function locally.
+4. **Deploy:**
+   - Run `vercel --prod` from the project root or connect the repository in the Vercel dashboard and trigger a deployment.
+
+The `@vercel/python` builder targets `app.py` and routes all requests to the Flask application, so no additional server entrypoint is needed.

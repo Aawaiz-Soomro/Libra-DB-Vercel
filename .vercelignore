@@ -1,0 +1,7 @@
+# Local artifacts that should not be bundled into the serverless function
+.venv
+__pycache__/
+*.pyc
+library.db
+migrations/versions/__pycache__/
+.DS_Store
